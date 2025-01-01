@@ -9,13 +9,15 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// Handle new task submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['task'])) {
     $task = $_POST['task'];
-    $stmt = $pdo->prepare("INSERT INTO tasks (user_id, task) VALUES (?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO tasks (user_id, task, status) VALUES (?, ?, 'pending')");
     $stmt->execute([$user_id, $task]);
 }
 
-$tasks = $pdo->prepare("SELECT * FROM tasks WHERE user_id = ?");
+// Fetch all tasks for the logged-in user
+$tasks = $pdo->prepare("SELECT * FROM tasks WHERE user_id = ? ORDER BY id DESC");
 $tasks->execute([$user_id]);
 $tasks = $tasks->fetchAll();
 ?>
@@ -23,7 +25,8 @@ $tasks = $tasks->fetchAll();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -124,18 +127,23 @@ $tasks = $tasks->fetchAll();
 <body>
     <div class="container">
         <h2>Task Management Dashboard</h2>
+
+        <!-- Form to Add New Task -->
         <form method="POST">
             <div class="form-group">
                 <input type="text" name="task" placeholder="New Task" required>
             </div>
             <button type="submit">Add Task</button>
         </form>
-        <h3>Your Tasks </h3>
+
+        <!-- Display User Tasks -->
+        <h3>Your Tasks</h3>
         <ul>
             <?php foreach ($tasks as $task): ?>
                 <li class="<?php echo $task['status'] === 'done' ? 'completed' : ''; ?>">
                     <?php echo htmlspecialchars($task['task']); ?>
                     <div>
+                        <a href="update_task.php?id=<?php echo $task['id']; ?>">Edit</a>
                         <?php if ($task['status'] !== 'done'): ?>
                             <a href="complete_task.php?id=<?php echo $task['id']; ?>">Complete</a>
                         <?php endif; ?>
@@ -144,8 +152,9 @@ $tasks = $tasks->fetchAll();
                 </li>
             <?php endforeach; ?>
         </ul>
+
+        <!-- Logout -->
         <a class="logout" href="logout.php">Logout</a>
     </div>
-  
 </body>
 </html>

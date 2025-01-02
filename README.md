@@ -77,14 +77,23 @@ Project Structure
 
 .
 ├── db.php                 # Database connection file
+
 ├── register.php           # User registration page
+
 ├── login.php              # User login page
+
 ├── logout.php             # Logout script
+
 ├── dashboard.php          # User dashboard for managing tasks
+
 ├── complete_task.php      # Script for marking tasks as complete
+
 ├── delete_task.php        # Script for deleting tasks
+
 ├── update_task.php        # Script for updating tasks
+
 ├── style.css              # CSS for styling the application
+
 └── README.md              # Project documentation
 
 ##Usage

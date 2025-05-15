@@ -1,12 +1,5 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>task management complete task</title>
-</head>
-<body>
+
 <?php
 session_start();
 include 'db.php';
@@ -24,5 +17,3 @@ if (isset($_GET['id'])) {
 
 header("Location: dashboard.php");
 ?>
-</body>
-</html>
